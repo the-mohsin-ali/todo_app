@@ -15,7 +15,8 @@ class TaskController extends GetxController{
   var filteredTasks = <UserTask>[].obs;
   RxBool showSearch = false.obs;
   TextEditingController searchController = TextEditingController();
-  StreamSubscription? _taskSubscription;
+  final RxBool isLoading = true.obs;
+  StreamSubscription<QuerySnapshot>? _taskSubscription;
 
   @override
   void onInit(){
@@ -75,15 +76,36 @@ class TaskController extends GetxController{
 
     await _taskSubscription?.cancel();
     _taskSubscription = _db.collection('tasks').where('userId', isEqualTo: userId).snapshots().listen((snapshot) {
-      tasks.value = snapshot.docs.map((doc) => UserTask.fromFirebase(doc)).toList();
+      if(kDebugMode){
+        print('snapshot received with ${snapshot.docs.length} tasks');
+      }
+      tasks.value = snapshot.docs.map((doc) => UserTask.fromFirebase(doc)).toList()
+      ..sort((a,b){
+        int compareCompleted = (a.isCompleted ? 1: 0).compareTo(b.isCompleted ? 1 : 0);
+        if(compareCompleted != 0){
+          return compareCompleted;
+        }
+        return a.dateTime.compareTo(b.dateTime);
+      });
+      isLoading.value = false;
     },
     onError: (e) {
       if (kDebugMode) {
           print('Error fetching tasks: $e');
         }
         Utils.snackBar('Error', 'Failed to fetch tasks: $e');
+        isLoading.value = false;
         tasks.clear();
-    } 
+        if(e.toString().contains('Network') || e.toString().contains('aborted')){
+          Future.delayed(Duration(seconds: 3), fetchTasks);
+        }
+    } ,
+    onDone: () {
+      if (kDebugMode) {
+        print('Fetch tasks stream closed');
+      }
+      isLoading.value = false;
+    },
     );
   }
 
@@ -127,9 +149,21 @@ class TaskController extends GetxController{
 
   Future<void> updateTask(UserTask task) async {
     try {
+      isLoading.value = true;
+      if (kDebugMode) {
+        print('Updating task with id: ${task.id}, data: ${task.toMap()}');
+      }
       await _db.collection('tasks').doc(task.id).update(task.toMap());
+      Utils.snackBar('Success', 'Task updated successfully',);
+      int index = tasks.indexWhere((t)=> t.id == task.id);
+      if (index != -1) {
+        tasks[index] == task;
+        tasks.refresh();
+      }
     } catch (e) {
       Utils.snackBar('Error', 'Failed to update task: $e');
+    }finally{
+      isLoading.value = false;
     }
   }
 

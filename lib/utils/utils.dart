@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/models/task/user_task.dart';
 import 'package:todo_app/res/colors/app_colors.dart';
+import 'package:todo_app/view_models/controller/bottom_bar_controller.dart';
 import 'package:todo_app/view_models/controller/task_controller.dart';
 
 class Utils {
@@ -37,8 +38,11 @@ class Utils {
   }
 
   static buildTaskCard(UserTask task, TaskController controller) {
+    // TextEditingController titleController = TextEditingController(
+    //   text: task.title,
+    // );
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: AppColors.cardColor,
@@ -62,7 +66,23 @@ class Utils {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
-              const Icon(Icons.edit, color: AppColors.subtitle),
+              PopupMenuButton<String>(
+                color: AppColors.cardColor,
+                icon: const Icon(Icons.edit, color: AppColors.subtitle),
+                onSelected: (String choice) {
+                  if (choice == 'Update') {
+                    Get.find<BottomBarController>().selectedIndex.value = 1;
+                  } else if (choice == 'delete') {
+                    // Perform delete action here
+                    // Example: controller.deleteItem(itemId);
+                    print('Delete action triggered');
+                  }
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem(child: Text('Update'), value: 'Update'),
+                  PopupMenuItem(child: Text('Delete'), value: 'delete'),
+                ],
+              ),
             ],
           ),
           const SizedBox(height: 4),

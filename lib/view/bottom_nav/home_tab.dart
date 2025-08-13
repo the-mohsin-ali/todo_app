@@ -122,8 +122,8 @@ class HomeTab extends GetResponsiveView<TaskController> {
               SizedBox(height: 40),
               Expanded(
                 child: Obx(
-                  () => controller.tasks.isEmpty && controller.filteredTasks.isEmpty ? 
-                  Center(child: Text('No tasks yet', style: TextStyle(color: AppColors.black, fontSize: 30),),) 
+                  () => controller.isLoading.value 
+                  ? Center(child: Text('No tasks yet', style: TextStyle(color: AppColors.black, fontSize: 30),),) 
                   : ListView.builder(
                     itemCount: controller.filteredTasks.length,
                     itemBuilder: (context, index) {
