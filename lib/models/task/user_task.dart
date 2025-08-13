@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserTask {
   String id;
+  String userId;
   String title;
   String? description;
   DateTime dateTime;
@@ -9,6 +10,7 @@ class UserTask {
 
   UserTask({
     required this.id,
+    required this.userId,
     required this.title,
     this.description,
     required this.dateTime,
@@ -19,6 +21,7 @@ class UserTask {
     final data = doc.data() as Map<String, dynamic>;
     return UserTask(
       id: doc.id,
+      userId: data['userId'], 
       title: data['title'],
       description: data['description'],
       dateTime: (data['dateTime'] as Timestamp).toDate(),
@@ -28,6 +31,8 @@ class UserTask {
 
   Map<String, dynamic> toMap(){
     return {
+      'id': id,
+      'userId': userId,
       'title': title,
       'description': description,
       'dateTime': dateTime,
