@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todo_app/firebase_options.dart';
 import 'package:todo_app/res/routes/routes.dart';
+// import 'package:todo_app/utils/global_variable.dart';
 import 'package:todo_app/view/splash_screen.dart';
 import 'package:todo_app/view_models/controller/auth_controller.dart';
 import 'package:todo_app/view_models/controller/bottom_bar_controller.dart';
@@ -10,7 +11,7 @@ import 'package:todo_app/view_models/controller/bottom_bar_controller.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
+  // await GlobalVariable.init();
   Get.put(AuthController());
   Get.put(BottomBarController());
   runApp(const MyApp());

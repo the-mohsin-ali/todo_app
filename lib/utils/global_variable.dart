@@ -8,7 +8,10 @@ class GlobalVariable {
 
   static Future<void> init() async {
     userName = await SharedPrefs.getUsername() ?? '';
+    print('userName: $userName');
     userEmail = await SharedPrefs.getEmail() ?? '';
+    print('userEmail: $userEmail');
     userNumber = await SharedPrefs.getPhoneNumber() ?? '';
+    print('userNumber: $userNumber');
   }
 }

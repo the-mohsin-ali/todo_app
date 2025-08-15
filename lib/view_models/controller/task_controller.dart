@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:todo_app/models/task/user_task.dart';
+import 'package:todo_app/utils/global_variable.dart';
 import 'package:todo_app/utils/utils.dart';
 import 'package:todo_app/view_models/controller/auth_controller.dart';
 import 'package:todo_app/view_models/services/shared_prefs.dart';
@@ -31,9 +32,10 @@ class TaskController extends GetxController {
   DateTime? selectedDateTime;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     fetchTasks();
+    await GlobalVariable.init();
     ever(tasks, (_) => filterTasks(searchController.text));
   }
 

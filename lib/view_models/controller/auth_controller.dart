@@ -27,7 +27,7 @@ class AuthController extends GetxController {
   void onInit() async {
     super.onInit();
     isLoading.value = true;
-    await GlobalVariable.init();
+    // await GlobalVariable.init();
     bool loggedIn = await SharedPrefs.getIsLoggedIn() ?? false;
     if (loggedIn && auth.currentUser != null) {
       Get.offAllNamed('/homeScreen');

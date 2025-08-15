@@ -21,7 +21,7 @@ class HomeTab extends GetResponsiveView<TaskController> {
           children: [
             UserAccountsDrawerHeader(
               decoration: BoxDecoration(
-                color: AppColors.subtitle, // ya koi bhi color
+                color: AppColors.subtitle, 
               ),
               accountName: Text(GlobalVariable.userName),
               accountEmail: Text(GlobalVariable.userEmail),
