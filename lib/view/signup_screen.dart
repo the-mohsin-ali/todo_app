@@ -6,22 +6,17 @@ import 'package:todo_app/res/routes/routes_name.dart';
 import 'package:todo_app/utils/utils.dart';
 import 'package:todo_app/view_models/controller/auth_controller.dart';
 
-class SignupScreen extends StatelessWidget {
-  const SignupScreen({super.key});
+class SignupScreen extends GetResponsiveWidget<AuthController> {
+  SignupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    // final controller = Get.find<AuthController>();
-
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsetsGeometry.all(20),
+          padding: const EdgeInsets.all(20),
           child: Form(
-            key: formKey,
+            key: controller.formKey,
             child: Column(
               children: [
                 Row(
@@ -37,28 +32,28 @@ class SignupScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 60),
-                // Align(
-                //   alignment: Alignment.centerLeft,
-                //   child: Text('Username', style: TextStyle(fontSize: 15)),
-                // ),
-                // const SizedBox(height: 20),
-                // TextFormField(
-                //   controller: usernameController,
-                //   decoration: Utils.inputDecoration(title: 'eg emmanuelogah'),
-                //   validator: (value) {
-                //     if (value!.isEmpty) {
-                //       return 'Please enter your username';
-                //     }
-                //   },
-                // ),
-                // const SizedBox(height: 30),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Username', style: TextStyle(fontSize: 15)),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: controller.usernameController,
+                  decoration: Utils.inputDecoration(title: 'eg emmanuelogah'),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your username';
+                    }
+                  },
+                ),
+                const SizedBox(height: 30),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text('Email', style: TextStyle(fontSize: 15)),
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
-                  controller: emailController,
+                  controller: controller.emailController,
                   decoration: Utils.inputDecoration(
                     title: 'eg emmanuel@gmail.com',
                   ),
@@ -74,7 +69,7 @@ class SignupScreen extends StatelessWidget {
                   child: Text('Password', style: TextStyle(fontSize: 15)),
                 ),
                 TextFormField(
-                  controller: passwordController,
+                  controller: controller.passwordController,
                   obscureText: true,
                   decoration: Utils.inputDecoration(title: '********'),
                   validator: (value) {
@@ -83,20 +78,37 @@ class SignupScreen extends StatelessWidget {
                     }
                   },
                 ),
+                const SizedBox(height: 30),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Phone Number', style: TextStyle(fontSize: 15)),
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: controller.phoneController,
+                  decoration: Utils.inputDecoration(title: 'eg 08012345678'),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter phone number';
+                    }
+                  },
+                ),
                 const SizedBox(height: 50),
                 RoundButton(
                   loading: false,
                   title: 'Signup',
                   onPress: () {
-                    if (formKey.currentState!.validate()) {
-                      AuthController.to.register(
-                        emailController.text.trim(),
-                        passwordController.text.trim(),
+                    if (controller.formKey.currentState!.validate()) {
+                      controller.register(
+                        controller.emailController.text.trim(),
+                        controller.passwordController.text.trim(),
+                        controller.usernameController.text.trim(),
+                        controller.phoneController.text.trim(),
                       );
                     }
                   },
                 ),
-                const Spacer(),
+                const SizedBox(height: 30),
                 Align(
                   alignment: Alignment.center,
                   child: Row(

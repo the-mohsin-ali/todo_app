@@ -13,7 +13,7 @@ class SplashService {
     bool loggedIn = await SharedPrefs.getIsLoggedIn() ?? false;
     User? currentUser = FirebaseAuth.instance.currentUser;
 
-    Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 3));
     
     if (loggedIn && currentUser != null) {
       Get.offAllNamed('/homeScreen');

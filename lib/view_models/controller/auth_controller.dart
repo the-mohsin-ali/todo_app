@@ -1,20 +1,33 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:todo_app/models/user_model.dart';
+import 'package:todo_app/utils/global_variable.dart';
 import 'package:todo_app/utils/utils.dart';
 import 'package:todo_app/view_models/services/shared_prefs.dart';
 
 class AuthController extends GetxController {
   static AuthController get to => Get.find();
 
+  final formKey = GlobalKey<FormState>();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+
   final FirebaseAuth auth = FirebaseAuth.instance;
   RxBool isLoading = true.obs;
   Rxn<User> user = Rxn<User>();
+
+  // var userName = ''.obs;
 
   @override
   void onInit() async {
     super.onInit();
     isLoading.value = true;
+    await GlobalVariable.init();
     bool loggedIn = await SharedPrefs.getIsLoggedIn() ?? false;
     if (loggedIn && auth.currentUser != null) {
       Get.offAllNamed('/homeScreen');
@@ -25,15 +38,7 @@ class AuthController extends GetxController {
     isLoading.value = false;
   }
 
-  // void _authStateChange(User? user){
-  //   if(user == null){
-  //     Get.offAllNamed('/onboarding');
-  //   }else{
-  //     Get.offAllNamed('/homeScreen');
-  //   }
-  // }
-
-  Future<void> register(String email, String password) async {
+  Future<void> register(String email, String password, String userName, String phoneNumber) async {
     try {
       isLoading.value = true;
 
@@ -41,10 +46,30 @@ class AuthController extends GetxController {
         email: email,
         password: password,
       );
-      User? userData = userCredential.user;
-      if (userData != null) {
-        await SharedPrefs.saveUserData(userData.uid, userData.email ?? '');
+
+      print('User Data at: $userCredential');
+
+      if (userCredential.user != null) {
+
+        final userModel = UserModel(
+          uid: userCredential.user!.uid,
+          email: userCredential.user!.email,
+          userName: userName,
+          phoneNumber: phoneNumber,
+        );
+
+        try{
+          await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .set(userModel.toMap());
+          print('userModel Data stored successfully');
+        }catch(e){
+          print('Error storing userModel data: $e');
+        }
       }
+
+
       Get.offAllNamed('/login');
     } catch (e) {
       if (kDebugMode) {
@@ -60,14 +85,33 @@ class AuthController extends GetxController {
     try {
       isLoading.value = true;
 
-      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+      UserCredential userCredential = await auth.signInWithEmailAndPassword( 
         email: email,
         password: password,
       );
       User? userData = userCredential.user;
-      print('User Data: $userData');
+      print('User Data at login: $userData');
       if (userData != null) {
-        await SharedPrefs.saveUserData(userData.uid, userData.email ?? '');
+        String uid = userData.uid;
+
+        DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        if(userDoc.exists){
+          print('value in userDoc: ${userDoc.data()}');
+
+          UserModel user = UserModel.fromMap(userDoc.data()!);
+        
+          await SharedPrefs.saveUserData(user);
+
+          print('User Data saved in login: ');
+          print('User ID: ${await SharedPrefs.getUserId()}');
+          print('Email: ${await SharedPrefs.getEmail()}'); 
+          print('User Name: ${await SharedPrefs.getUsername()}');
+          print('Phone Number: ${await SharedPrefs.getPhoneNumber()}');
+
+        }else{
+          print('User document does not exist');
+          return;
+        }
       }
       Get.offAllNamed('/homeScreen');
     } catch (e) {
@@ -79,6 +123,12 @@ class AuthController extends GetxController {
       isLoading.value = false;
     }
   }
+
+
+  // void loadUsername() async{
+  //   userName.value = await SharedPrefs.getUsername() ?? '';
+  //   print('userName fetched in loadUsername() : $userName');
+  // }
 
   Future<void> logout() async {
     try {

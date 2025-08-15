@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todo_app/res/colors/app_colors.dart';
@@ -23,6 +24,9 @@ class LoginScreen extends StatelessWidget {
             key: formKey,
             child: Column(
               children: [
+                // CupertinoExpansionTile(
+                  
+                // )
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -45,6 +49,7 @@ class LoginScreen extends StatelessWidget {
                     if(value!.isEmpty){
                       return 'Please enter your email';
                     }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 30),
@@ -60,6 +65,7 @@ class LoginScreen extends StatelessWidget {
                     if(value!.isEmpty){
                       return 'Please enter your password';
                     }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 30),

@@ -38,9 +38,6 @@ class Utils {
   }
 
   static buildTaskCard(UserTask task, TaskController controller) {
-    // TextEditingController titleController = TextEditingController(
-    //   text: task.title,
-    // );
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.all(10),
@@ -68,13 +65,18 @@ class Utils {
               ),
               PopupMenuButton<String>(
                 color: AppColors.cardColor,
-                icon: const Icon(Icons.edit, color: AppColors.subtitle),
+                icon: const Icon(Icons.more_vert, color: AppColors.subtitle),
                 onSelected: (String choice) {
                   if (choice == 'Update') {
+                    controller.setEditingTask(task);
+                    controller.titleController.text = task.title;
+                    controller.desController.text = task.description ?? '';
+                    controller.dateTimeController.text = task.dateTime
+                        .toString();
+                    print('Update action triggered ');
                     Get.find<BottomBarController>().selectedIndex.value = 1;
                   } else if (choice == 'delete') {
-                    // Perform delete action here
-                    // Example: controller.deleteItem(itemId);
+                    controller.deleteTask(task);
                     print('Delete action triggered');
                   }
                 },

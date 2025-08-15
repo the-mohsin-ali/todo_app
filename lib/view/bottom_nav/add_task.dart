@@ -8,32 +8,16 @@ import 'package:todo_app/utils/utils.dart';
 import 'package:todo_app/view_models/controller/bottom_bar_controller.dart';
 import 'package:todo_app/view_models/controller/task_controller.dart';
 
-class AddTask extends StatelessWidget {
+class AddTask extends GetResponsiveView<TaskController> {
   AddTask({super.key});
-
-  final RxBool checkbox = false.obs;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    DateTime? selectedDateTime;
-
-    final taskController = Get.find<TaskController>();
-    BottomBarController bottomBarController = Get.put(BottomBarController());
-    TextEditingController dateTimeController = TextEditingController();
-    TextEditingController titleController = TextEditingController();
-    TextEditingController desController = TextEditingController();
-
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            bottomBarController.goToHomeTab();
-          },
-          icon: Icon(Icons.arrow_back),
-        ),
+        centerTitle: true,
         title: Text(
-          "Add Task",
+          controller.editingTask.value != null ? "Edit Task" : "Add Task",
           style: TextStyle(
             color: AppColors.black,
             fontSize: 20,
@@ -44,7 +28,7 @@ class AddTask extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Form(
-          key: _formKey,
+          key: controller.formKey,
           child: Column(
             children: [
               SizedBox(height: 20),
@@ -57,7 +41,7 @@ class AddTask extends StatelessWidget {
               ),
               SizedBox(height: 10),
               TextFormField(
-                controller: titleController,
+                controller: controller.titleController,
                 decoration: Utils.inputDecoration(title: 'eg buy a bike'),
                 validator: (value) =>
                     value == null || value.isEmpty ? 'Enter task title' : null,
@@ -72,7 +56,7 @@ class AddTask extends StatelessWidget {
               ),
               SizedBox(height: 10),
               TextFormField(
-                controller: desController,
+                controller: controller.desController,
                 decoration: Utils.inputDecoration(title: ''),
                 maxLines: 4,
                 // validator: (value) => value == null || value.isEmpty ? 'Enter task description' : null,
@@ -87,7 +71,7 @@ class AddTask extends StatelessWidget {
               ),
               SizedBox(height: 10),
               TextFormField(
-                controller: dateTimeController,
+                controller: controller.dateTimeController,
                 readOnly: true,
                 decoration: Utils.inputDecoration(
                   title: 'Select date and time',
@@ -106,7 +90,7 @@ class AddTask extends StatelessWidget {
                       );
 
                       if (pickedTime != null) {
-                        selectedDateTime = DateTime(
+                        controller.selectedDateTime = DateTime(
                           pickedDate.year,
                           pickedDate.month,
                           pickedDate.day,
@@ -115,8 +99,8 @@ class AddTask extends StatelessWidget {
                         );
                         String formatted = DateFormat(
                           'd MMM y - h:mm a',
-                        ).format(selectedDateTime!);
-                        dateTimeController.text = formatted;
+                        ).format(controller.selectedDateTime!);
+                        controller.dateTimeController.text = formatted;
                       }
                     }
                   },
@@ -136,9 +120,9 @@ class AddTask extends StatelessWidget {
                   Obx(
                     () => Checkbox(
                       activeColor: AppColors.secondary,
-                      value: checkbox.value,
+                      value: controller.checkbox.value,
                       onChanged: (bool? value) {
-                        checkbox.value = value ?? false;
+                        controller.checkbox.value = value ?? false;
                       },
                     ),
                   ),
@@ -147,19 +131,40 @@ class AddTask extends StatelessWidget {
               const Spacer(),
               RoundButton(
                 loading: false,
-                title: "Add Task",
+                title: controller.editingTask.value != null
+                    ? "Update Task"
+                    : "Add Task",
                 onPress: () async {
-                  if (_formKey.currentState!.validate()) {
-                    final taskId = '';
-                    final task = UserTask(
-                      id: taskId,
-                      title: titleController.text,
-                      description: desController.text,
-                      dateTime: selectedDateTime!,
-                      isCompleted: false, userId: '',
-                    );
-                    await taskController.addTask(task);
-                    //  
+                  if (controller.formKey.currentState!.validate()) {
+                    if (controller.editingTask.value != null) {
+                      controller.editingTask.value!.title =
+                          controller.titleController.text;
+                      controller.editingTask.value!.description =
+                          controller.desController.text;
+                      controller.editingTask.value!.dateTime =
+                          controller.selectedDateTime!;
+
+                      print(
+                        'value in editing task: ${controller.editingTask.value}',
+                      );
+                      await controller.updateTask();
+                    } else {
+                      final taskId = '';
+                      final task = UserTask(
+                        id: taskId,
+                        title: controller.titleController.text,
+                        description: controller.desController.text,
+                        dateTime: controller.selectedDateTime!,
+                        isCompleted: false,
+                        userId: '',
+                      );
+
+                      await controller.addTask(task);
+                    }
+
+                    BottomBarController bottomBarController =
+                        Get.find<BottomBarController>();
+                    controller.clearEditingTask();
                     bottomBarController.goToHomeTab();
                   }
                 },

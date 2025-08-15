@@ -28,7 +28,7 @@ class AppRoutes {
     ),
     GetPage(
       name: '/signup',
-      page: () => const SignupScreen(),
+      page: () =>  SignupScreen(),
       transitionDuration: Duration(milliseconds: 250),
       transition: Transition.leftToRightWithFade,
     ),

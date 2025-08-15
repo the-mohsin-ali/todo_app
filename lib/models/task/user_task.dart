@@ -35,7 +35,7 @@ class UserTask {
       'userId': userId,
       'title': title,
       'description': description,
-      'dateTime': dateTime,
+      'dateTime': Timestamp.fromDate( dateTime ),
       'isCompleted': isCompleted,
     };
   }
