@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:todo_app/res/colors/app_colors.dart';
 import 'package:todo_app/res/components/round_button.dart';
@@ -20,9 +21,7 @@ class HomeTab extends GetResponsiveView<TaskController> {
         child: Column(
           children: [
             UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: AppColors.subtitle, 
-              ),
+              decoration: BoxDecoration(color: AppColors.subtitle),
               accountName: Text(GlobalVariable.userName),
               accountEmail: Text(GlobalVariable.userEmail),
               currentAccountPicture: CircleAvatar(child: Text(firstLetter)),
@@ -59,12 +58,12 @@ class HomeTab extends GetResponsiveView<TaskController> {
                       },
                       child: CircleAvatar(
                         backgroundColor: Color(0xFFEADDFF),
-                        radius: 30,
+                        radius: 25.r,
                         child: Text(
                           firstLetter,
                           style: TextStyle(
                             color: AppColors.black,
-                            fontSize: 25,
+                            fontSize: 25.sp,
                           ),
                         ),
                       ),
@@ -76,17 +75,20 @@ class HomeTab extends GetResponsiveView<TaskController> {
                         icon: Icon(
                           Icons.search,
                           color: AppColors.black,
-                          size: 30,
+                          size: 30.sp,
                         ),
                         onPressed: () {
                           controller.toggleSearch();
                         },
                       ),
-                      SizedBox(width: 10),
+                      10.horizontalSpace,
                       IconButton(
                         color: AppColors.black,
                         onPressed: () {},
-                        icon: Icon(Icons.notifications_none_outlined, size: 30),
+                        icon: Icon(
+                          Icons.notifications_none_outlined,
+                          size: 30.sp,
+                        ),
                       ),
                     ],
                   ),
@@ -119,7 +121,7 @@ class HomeTab extends GetResponsiveView<TaskController> {
                   'Hello ${GlobalVariable.userName} 👋',
                   style: TextStyle(
                     color: AppColors.black,
-                    fontSize: 35,
+                    fontSize: 35.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -133,7 +135,7 @@ class HomeTab extends GetResponsiveView<TaskController> {
                   ),
                 ],
               ),
-              SizedBox(height: 40),
+              40.verticalSpace,
               Expanded(
                 child: Obx(
                   () => controller.isLoading.value
@@ -142,7 +144,7 @@ class HomeTab extends GetResponsiveView<TaskController> {
                             'No tasks yet',
                             style: TextStyle(
                               color: AppColors.black,
-                              fontSize: 30,
+                              fontSize: 30.sp,
                             ),
                           ),
                         )

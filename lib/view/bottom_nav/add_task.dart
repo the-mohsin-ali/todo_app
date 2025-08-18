@@ -135,6 +135,9 @@ class AddTask extends GetResponsiveView<TaskController> {
                     ? "Update Task"
                     : "Add Task",
                 onPress: () async {
+                  print(
+                    'editing task value in edit task: ${controller.editingTask.value}',
+                  );
                   if (controller.formKey.currentState!.validate()) {
                     if (controller.editingTask.value != null) {
                       controller.editingTask.value!.title =

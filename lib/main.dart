@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:todo_app/firebase_options.dart';
 import 'package:todo_app/res/routes/routes.dart';
@@ -22,13 +23,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    return ScreenUtilInit(
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      builder: (context, child) => 
+      GetMaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
+        getPages: AppRoutes.appRoutes(),
+        home: const SplashScreen(),
       ),
-      getPages: AppRoutes.appRoutes(),
-      home: const SplashScreen(),
     );
   }
 }
@@ -79,3 +85,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+

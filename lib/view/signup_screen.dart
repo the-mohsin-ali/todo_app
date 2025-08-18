@@ -44,6 +44,7 @@ class SignupScreen extends GetResponsiveWidget<AuthController> {
                     if (value!.isEmpty) {
                       return 'Please enter your username';
                     }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 30),
@@ -61,6 +62,7 @@ class SignupScreen extends GetResponsiveWidget<AuthController> {
                     if (value!.isEmpty) {
                       return 'Please enter your email';
                     }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 30),
@@ -76,6 +78,7 @@ class SignupScreen extends GetResponsiveWidget<AuthController> {
                     if (value!.isEmpty) {
                       return 'Please enter your password';
                     }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 30),
@@ -91,6 +94,7 @@ class SignupScreen extends GetResponsiveWidget<AuthController> {
                     if (value!.isEmpty) {
                       return 'Please enter phone number';
                     }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 50),

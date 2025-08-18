@@ -38,7 +38,19 @@ class AuthController extends GetxController {
     isLoading.value = false;
   }
 
-  Future<void> register(String email, String password, String userName, String phoneNumber) async {
+  void clearFields() {
+    emailController.clear();
+    passwordController.clear();
+    phoneController.clear();
+    usernameController.clear();
+  }
+
+  Future<void> register(
+    String email,
+    String password,
+    String userName,
+    String phoneNumber,
+  ) async {
     try {
       isLoading.value = true;
 
@@ -50,7 +62,6 @@ class AuthController extends GetxController {
       print('User Data at: $userCredential');
 
       if (userCredential.user != null) {
-
         final userModel = UserModel(
           uid: userCredential.user!.uid,
           email: userCredential.user!.email,
@@ -58,18 +69,17 @@ class AuthController extends GetxController {
           phoneNumber: phoneNumber,
         );
 
-        try{
+        try {
           await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .set(userModel.toMap());
+              .collection('users')
+              .doc(userCredential.user!.uid)
+              .set(userModel.toMap());
           print('userModel Data stored successfully');
-        }catch(e){
+        } catch (e) {
           print('Error storing userModel data: $e');
         }
       }
-
-
+      clearFields();
       Get.offAllNamed('/login');
     } catch (e) {
       if (kDebugMode) {
@@ -85,7 +95,7 @@ class AuthController extends GetxController {
     try {
       isLoading.value = true;
 
-      UserCredential userCredential = await auth.signInWithEmailAndPassword( 
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -94,25 +104,29 @@ class AuthController extends GetxController {
       if (userData != null) {
         String uid = userData.uid;
 
-        DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
-        if(userDoc.exists){
+        DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
+            .instance
+            .collection('users')
+            .doc(uid)
+            .get();
+        if (userDoc.exists) {
           print('value in userDoc: ${userDoc.data()}');
 
           UserModel user = UserModel.fromMap(userDoc.data()!);
-        
+
           await SharedPrefs.saveUserData(user);
 
           print('User Data saved in login: ');
           print('User ID: ${await SharedPrefs.getUserId()}');
-          print('Email: ${await SharedPrefs.getEmail()}'); 
+          print('Email: ${await SharedPrefs.getEmail()}');
           print('User Name: ${await SharedPrefs.getUsername()}');
           print('Phone Number: ${await SharedPrefs.getPhoneNumber()}');
-
-        }else{
+        } else {
           print('User document does not exist');
           return;
         }
       }
+      await GlobalVariable.init();
       Get.offAllNamed('/homeScreen');
     } catch (e) {
       if (kDebugMode) {
@@ -123,12 +137,6 @@ class AuthController extends GetxController {
       isLoading.value = false;
     }
   }
-
-
-  // void loadUsername() async{
-  //   userName.value = await SharedPrefs.getUsername() ?? '';
-  //   print('userName fetched in loadUsername() : $userName');
-  // }
 
   Future<void> logout() async {
     try {

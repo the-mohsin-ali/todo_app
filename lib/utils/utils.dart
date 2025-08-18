@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/models/task/user_task.dart';
@@ -43,11 +44,11 @@ class Utils {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: AppColors.cardColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.sp),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withValues(alpha: 0.1),
-            blurRadius: 8,
+            blurRadius: 8.sp,
             offset: Offset(0, 2),
           ),
         ],
@@ -60,7 +61,10 @@ class Utils {
               Expanded(
                 child: Text(
                   task.title,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               PopupMenuButton<String>(
@@ -71,8 +75,8 @@ class Utils {
                     controller.setEditingTask(task);
                     controller.titleController.text = task.title;
                     controller.desController.text = task.description ?? '';
-                    controller.dateTimeController.text = task.dateTime
-                        .toString();
+                    controller.dateTimeController.text = task.dateTime.toString();
+                    controller.selectedDateTime = task.dateTime;
                     print('Update action triggered ');
                     Get.find<BottomBarController>().selectedIndex.value = 1;
                   } else if (choice == 'delete') {
@@ -87,18 +91,18 @@ class Utils {
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          4.verticalSpace,
           Text(
             task.description ?? '',
-            style: TextStyle(color: AppColors.subtitle, fontSize: 14),
+            style: TextStyle(color: AppColors.subtitle, fontSize: 14.sp),
           ),
-          const SizedBox(height: 20),
+          20.verticalSpace,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 DateFormat('h:mm a d MMM, yyyy').format(task.dateTime),
-                style: const TextStyle(fontSize: 12, color: AppColors.black),
+                style: TextStyle(fontSize: 11.sp, color: AppColors.black),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -106,14 +110,14 @@ class Utils {
                   Text(
                     'Mark as completed',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 13.sp,
                       fontWeight: FontWeight.w500,
                       color: task.isCompleted
                           ? AppColors.green
                           : AppColors.subtitle,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  8.horizontalSpace,
                   Checkbox(
                     activeColor: AppColors.green,
                     value: task.isCompleted,
