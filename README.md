@@ -42,9 +42,16 @@ A simple, fully-featured **To-Do list application** built with **Flutter**, usin
 
 ## 📸 Screenshots
 
-> _Add your screenshots here to show the login screen, task list, and completed list UI._
+<img width="228" height="506" alt="image" src="https://github.com/user-attachments/assets/63950cd2-14f2-4a9d-acef-1d67d9e25f07" />
+<img width="227" height="507" alt="image" src="https://github.com/user-attachments/assets/f2ef14ee-6b1d-43eb-88cf-657b10c264c4" />
+<img width="227" height="505" alt="image" src="https://github.com/user-attachments/assets/11c0cfe5-7398-4ebd-adca-5b1b89e4c28b" />
+<img width="229" height="505" alt="image" src="https://github.com/user-attachments/assets/cfd697a1-9205-409e-97d0-7e3cfadda05c" />
+<img width="226" height="507" alt="image" src="https://github.com/user-attachments/assets/86a0d3ca-6a4f-47a9-b61a-0cf18b1876c8" />
 
----
+
+
+
+-
 
 ## 🛠 Setup Instructions
 
